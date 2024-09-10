@@ -1,0 +1,17 @@
+/api/auth/otp/resend:
+   post:
+     tags: [Auth]
+     summary: Resend OTP
+     requestBody:
+       required: true
+       content:
+         application/json:
+           schema:
+             $ref: '#/components/schemas/OtpResend'
+     responses:
+       '200':
+         description: OTP resent successfully
+         content:
+           application/json:
+            schema:
+              $ref: '#/components/schemas/OtpResend'

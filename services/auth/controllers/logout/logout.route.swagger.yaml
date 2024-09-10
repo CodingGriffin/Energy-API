@@ -1,0 +1,8 @@
+/api/auth/logout:
+  get:
+    summary: Logout of logged in user
+    description: Discard Token, User Logged out
+    tags: [Auth]
+    responses:
+      200:
+        description: Successful token discarded response

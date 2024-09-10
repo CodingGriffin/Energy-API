@@ -1,0 +1,17 @@
+/api/auth/otp/send:
+   post:
+     tags: [Auth]
+     summary: Request OTP
+     requestBody:
+       required: true
+       content:
+         application/json:
+           schema:
+             $ref: '#/components/schemas/OtpRequest'
+     responses:
+       '200':
+         description: OTP sent successfully
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/OtpResponse'

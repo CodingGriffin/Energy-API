@@ -1,0 +1,19 @@
+/api/auth/otp/verify:
+  post:
+    tags: [Auth]
+    summary: Verify OTP
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VerifyOTPRequest'
+    responses:
+      '200':
+        description: OTP verified successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyOTPResponse'
+      '400':
+        description: Invalid OTP

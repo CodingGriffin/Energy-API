@@ -1,0 +1,12 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/noble-return-428417-j4/network-api/network-api:latest', '.']
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'us-central1-docker.pkg.dev/noble-return-428417-j4/network-api/network-api:latest']
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['run', 'deploy', 'network-api', '--image', 'us-central1-docker.pkg.dev/noble-return-428417-j4/network-api/network-api:latest', '--region', 'us-central1', '--allow-unauthenticated']
+
+options:
+  logging: CLOUD_LOGGING_ONLY

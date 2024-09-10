@@ -1,0 +1,155 @@
+components:
+ schemas:
+   LoginRequest:
+     type: object
+     required:
+       - email
+       - password
+     properties:
+       email:
+         type: string
+       password:
+         type: string
+         
+   LoginResponse:
+     type: object
+     properties:
+       token:
+         type: string
+         
+   VerifyOTPRequest:
+     type: object 
+     required:
+       - email
+       - guid
+       - otp
+     properties:
+       email:
+         type: string
+       guid:
+         type: string
+       otp:
+         type: string
+         
+   VerifyOTPResponse:
+     type: object 
+     required:
+       - guid
+     properties:
+       guid:
+         type: string
+
+   RegisterVerifyOTPRequest:
+     type: object 
+     required:
+       - email
+       - guid
+       - registerGuid
+       - otp
+     properties:
+       email:
+         type: string
+       guid:
+         type: string
+       registerGuid:
+         type: string
+       otp:
+         type: string
+
+   ChangePasswordRequest:
+     type: object
+     required:
+       - email
+       - newPassword
+       - guid
+       - otp
+     properties:
+       email:
+         type: string
+       newPassword:
+         type: string
+       guid:
+         type: string
+       otp:
+         type: string
+       
+   OtpRequest:
+     type: object
+     required:
+       - email
+     properties:
+       email:
+         type: string
+
+   OtpResponse:
+     type: object
+     required:
+       - email
+       - guid
+     properties:
+       email:
+         type: string
+       guid:
+         type: string
+
+   RegisterOtpRequest:
+     type: object
+     required:
+       - email
+       - registerGuid
+     properties:
+       email:
+         type: string
+       registerGuid:
+         type: string
+       
+   OtpResend:
+     type: object
+     required:
+       - email
+       - guid
+     properties:
+       email:
+         type: string
+       guid:
+         type: string
+
+   RegisterOtpResend:
+     type: object
+     required:
+       - email
+       - guid
+       - registerGuid
+     properties:
+       email:
+         type: string
+       guid:
+         type: string
+       registerGuid:
+         type: string
+
+   RegisterRequest:
+     type: object
+     required:
+       - first_name
+       - last_name
+       - email
+       - password
+       - otp
+       - guid
+       - registerGuid
+     properties:
+       first_name:
+         type: string
+       last_name:
+         type: string
+       email:
+         type: string
+       password:
+         type: string
+       otp:
+         type: string
+       guid:
+         type: string
+       registerGuid:
+         type: string

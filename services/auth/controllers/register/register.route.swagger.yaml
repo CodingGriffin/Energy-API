@@ -1,0 +1,19 @@
+/api/auth/register:
+  post:
+    tags: [Auth]
+    summary: Register a new user account
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisterRequest'
+    responses:
+      '201':
+        description: User registered successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginResponse'
+      '400':
+        description: Invalid request
