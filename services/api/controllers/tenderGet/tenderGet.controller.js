@@ -1,6 +1,6 @@
 const { System } = require("../../../../database/database");
 
-const systemGetController = async (req, res) => {
+const tenderGetController = async (req, res) => {
     try {
         const systems = await System.findAll()
         console.log(systems);
@@ -14,7 +14,7 @@ const systemGetController = async (req, res) => {
 module.exports = {
     method: 'GET',
     path: '/api/system',
-    handler: systemGetController,
+    handler: tenderGetController,
     requiresAuth: false,
     permissions: []
 };
