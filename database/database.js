@@ -17,6 +17,9 @@ const AccountVerification = require('../models/AccountVerification')(sequelize);
 const Address = require('../models/Address')(sequelize);
 const System = require('../models/System')(sequelize);
 
+System.hasOne(Address);
+Address.belongsTo(System);
+
 (async () => {
   try {
     await sequelize.authenticate();
