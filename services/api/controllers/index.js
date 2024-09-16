@@ -3,5 +3,6 @@ module.exports = {
   mapSystemsGetRoute: require('./mapSystemsGet/mapSystemsGet.controller.js'),
   mapZonesByLocationGetRoute: require('./mapZonesByLocationGet/mapZonesByLocationGet.controller.js'),
   systemSubmitRoute: require('./systemSubmit/systemSubmit.controller.js'),
-  tenderRoute: require('./tenderGet/tenderGet.controller.js'),
+  tenderGetRoute: require('./tenderGet/tenderGet.controller.js'),
+  tenderDetailGetRoute: require('./tenderDetailGet/tenderDetailGet.controller.js')
 };

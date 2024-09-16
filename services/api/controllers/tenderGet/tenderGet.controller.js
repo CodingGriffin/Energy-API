@@ -2,8 +2,8 @@ const { System } = require("../../../../database/database");
 
 const tenderGetController = async (req, res) => {
   try {
-    const res = await System.findAll();
-		return res.status(200).json([ ...res ]);
+    const data = await System.findAll();
+		return res.status(200).json([ ...data ]);
   }
   catch (err) {
     console.log(err.message);
@@ -13,7 +13,7 @@ const tenderGetController = async (req, res) => {
 
 module.exports = {
   method: 'GET',
-  path: '/api/system',
+  path: '/api/tender',
   handler: tenderGetController,
   requiresAuth: false,
   permissions: []

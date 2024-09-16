@@ -16,7 +16,10 @@ const User = require('../models/User')(sequelize);
 const AccountVerification = require('../models/AccountVerification')(sequelize);
 const Address = require('../models/Address')(sequelize);
 const System = require('../models/System')(sequelize);
+const ServiceCenter = require('../models/ServiceCenter')(sequelize);
 
+User.hasMany(ServiceCenter);
+ServiceCenter.belongsTo(User);
 System.hasOne(Address);
 Address.belongsTo(System);
 
