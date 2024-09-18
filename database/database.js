@@ -14,6 +14,14 @@ const sequelize = new Sequelize('hatronikadev', 'hatronika', 'y5i0!p0)pl83t9]', 
 
 const User = require('../models/User')(sequelize);
 const AccountVerification = require('../models/AccountVerification')(sequelize);
+const Address = require('../models/Address')(sequelize);
+const System = require('../models/System')(sequelize);
+const ServiceCenter = require('../models/ServiceCenter')(sequelize);
+
+User.hasMany(ServiceCenter);
+ServiceCenter.belongsTo(User);
+System.hasOne(Address);
+Address.belongsTo(System);
 
 (async () => {
   try {
@@ -32,5 +40,7 @@ const AccountVerification = require('../models/AccountVerification')(sequelize);
 module.exports = {
   sequelize,
   User,
-  AccountVerification
+  AccountVerification,
+  Address,
+  System
 };
