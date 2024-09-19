@@ -82,7 +82,8 @@ function calculateIRR(cashFlows, guess = 0.1) {
     let derivative = cashFlows.reduce((acc, val, i) => acc - i * val / Math.pow(1 + irr, i + 1), 0);
 
     if (Math.abs(derivative) < tolerance) {
-      throw new Error('Derivative is too small, method failed to converge');
+      return 0;
+      // throw new Error('Derivative is too small, method failed to converge');
     }
 
     let newIrr = irr - npvValue / derivative;
@@ -155,10 +156,11 @@ function renderCashArray(array) {
 const tenderDetailController = async (req, res) => {
   try {
 
+    console.log(req.query)
     const { id } = req.params;
     const tender_ = await System.findByPk(id);
     const tender = tender_.dataValues;
-    const costPerUnit = req.body.costPerUnit ? req.body.costPerUnit : tender.unit_cost_current;
+    const costPerUnit = req.query.costPerUnit ? req.query.costPerUnit : tender.unit_cost_current;
 
     const initialInvest = tender.system_cost_incl;
     const consumptionPM = tender.monthly_consumption_kwh

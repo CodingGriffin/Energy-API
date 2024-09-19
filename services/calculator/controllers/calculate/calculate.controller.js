@@ -1,190 +1,336 @@
+const PANEL_RATING = 500; // W
+const SYSTEM_DAILY_POWER_GENERATED_PER_PANEL = 4.5; // kWh/day
+const PEAK_POWER_PER_PANEL = 0.5; // kW
+const FLOATING_OUTPUT_PER_PANEL = 0.5; // kWh
+const BATTERY_CAPACITY_PER_PANEL = 2.5; // kWh
+
+// Costs
+const PANEL_COST = 27000; // R per panel
+const EMS_COST = 9000; // R per EMS unit
+const VAT_RATE = 0.15;
+const DELIVERY_PERCENTAGE = 0.01; // 1%
+
+// Investment Parameters
+const PANEL_LIFE_EXPECTANCY_YEARS = 20;
+const DEGRADATION_RATE = 0.029; // 2.9% per year
+const INFLATION_RATE = 0.07; // 7% per year
+
+// Additional Costs Percentages
+const MAINTENANCE_PERCENTAGE = 0.05; // 5%
+const INSURANCE_PERCENTAGE = 0.01; // 1%
+const BREAKAGE_PERCENTAGE = 0.005; // 0.5%
+const WARRANTY_FUND_PERCENTAGE = 0.0025; // 0.25%
+const DBR_PERCENTAGE = 0.0025; // 0.25%
+const SERVICE_CENTER_PERCENTAGE = 0.005; // 0.5%
+const ROOF_OWNER_PERCENTAGE = 0.01; // 1%
+
+// Helper Functions
+
 function calculateKitCost(panelsTotal) {
-  var costAcCablePerMeter = 300;
-  var acCableMetersRequired = 19;
+  const costAcCablePerMeter = 300;
+  const acCableMetersRequired = 19;
 
-  var costEarthSpike = 150;
-  var earthSpikeRequired = 2;
+  const costEarthSpike = 150;
+  const earthSpikeRequired = 2;
 
-  var costEarthCablePerMeter = 50;
-  var earthCableRequired = 10;
+  const costEarthCablePerMeter = 50;
+  const earthCableRequired = 10;
 
-  var costRailsClampsPerPanel = 800;
+  const costRailsClampsPerPanel = 800;
 
-  var acCableCost = costAcCablePerMeter * acCableMetersRequired;
-  var earthCableCost = costEarthCablePerMeter * earthCableRequired;
-  var earthSpikeCost = costEarthSpike * earthSpikeRequired;
+  const acCableCost = costAcCablePerMeter * acCableMetersRequired;
+  const earthCableCost = costEarthCablePerMeter * earthCableRequired;
+  const earthSpikeCost = costEarthSpike * earthSpikeRequired;
 
-  var baseKitPrice = acCableCost + earthCableCost + earthSpikeCost;
+  const baseKitPrice = acCableCost + earthCableCost + earthSpikeCost;
 
-  var railsInstallationCost = panelsTotal * costRailsClampsPerPanel;
+  const railsInstallationCost = panelsTotal * costRailsClampsPerPanel;
 
-  var installationCost = baseKitPrice + railsInstallationCost;
+  const installationCost = baseKitPrice + railsInstallationCost;
 
   return installationCost;
 }
 
-function culculateLabourCost(panelsTotal, emsTotal) {
-  var costLabourPerHour = 750;
-  var requiredLabourPerPanel = 0.5;
+function calculateLabourCost(panelsTotal, emsTotal) {
+  const costLabourPerHour = 750;
+  const requiredLabourPerPanel = 0.5;
 
-  var costPowerPackConfigurationPerHour = 750;
-  var requiredPowerPackConfigurationPerPanel = 0.25;
+  const costPowerPackConfigurationPerHour = 750;
+  const requiredPowerPackConfigurationPerPanel = 0.25;
 
-  var costEmsConfigurationPerHour = 750;
-  var requiredEmsConfigurationPerEMS = 2;
+  const costEmsConfigurationPerHour = 750;
+  const requiredEmsConfigurationPerEMS = 2;
 
-  var cocCostPerEms = 2500;
-  var requiredCocPerEms = 1;
+  const cocCostPerEms = 2500;
+  const requiredCocPerEms = 1;
 
-  var callOutCost = 950;
-  var consumablesCost = 1000;
-  var licenseFeeCredits = 1250;
-  var installationBaseCost = callOutCost + consumablesCost + licenseFeeCredits;
+  const callOutCost = 950;
+  const consumablesCost = 1000;
+  const licenseFeeCredits = 1250;
+  const installationBaseCost = callOutCost + consumablesCost + licenseFeeCredits;
 
-  var panelInstallationCost = costLabourPerHour * requiredLabourPerPanel * panelsTotal;
-  var powerpackConfigurationCost = costPowerPackConfigurationPerHour * requiredPowerPackConfigurationPerPanel * panelsTotal;
+  const panelInstallationCost =
+    costLabourPerHour * requiredLabourPerPanel * panelsTotal;
+  const powerpackConfigurationCost =
+    costPowerPackConfigurationPerHour *
+    requiredPowerPackConfigurationPerPanel *
+    panelsTotal;
 
-  var emsConfigurationCost = costEmsConfigurationPerHour * requiredEmsConfigurationPerEMS * emsTotal;
+  const emsConfigurationCost =
+    costEmsConfigurationPerHour * requiredEmsConfigurationPerEMS * emsTotal;
 
-  var cocTotalCost = cocCostPerEms * requiredCocPerEms * emsTotal;
+  const cocTotalCost = cocCostPerEms * requiredCocPerEms * emsTotal;
 
-  var totalLabourCost = installationBaseCost + panelInstallationCost + powerpackConfigurationCost + emsConfigurationCost + cocTotalCost;
+  const totalLabourCost =
+    installationBaseCost +
+    panelInstallationCost +
+    powerpackConfigurationCost +
+    emsConfigurationCost +
+    cocTotalCost;
 
   return totalLabourCost;
 }
 
-function calculateLcoe(initialInvestment, dailyProduction, lifespan) {
+function calculateLcoe(initialInvestment, dailyProduction, lifespanYears) {
   let totalCost = initialInvestment;
   let annualProduction = dailyProduction * 365;
   let totalProduction = 0;
 
-  const degradationRate = 0.029;
-  const inflationRate = 0.07;
-
-  for (let year = 1; year <= lifespan; year++) {
-      let yearlyProduction = annualProduction * Math.pow((1 - degradationRate), year - 1);
-      totalProduction += yearlyProduction;
+  for (let year = 1; year <= lifespanYears; year++) {
+    let yearlyProduction =
+      annualProduction * Math.pow(1 - DEGRADATION_RATE, year - 1);
+    totalProduction += yearlyProduction;
   }
 
   let lcoe = totalCost / totalProduction;
   return lcoe;
 }
 
+// Endpoint Definition
+
 const calculateController = (req, res) => {
+  // Extract inputs
+  const {
+    totalPanels,
+    inverterSize,
+    monthlyConsumption,
+    currentMonthlyCost,
+    totalRooms,
+    totalDistributionBoards,
+  } = req.body;
 
-  const msg = { payload: req.body };
+  // Input Validation
+  if (
+    !monthlyConsumption ||
+    !currentMonthlyCost ||
+    !totalRooms ||
+    !totalDistributionBoards
+  ) {
+    return res.status(400).json({
+      error:
+        'Missing required fields: monthlyConsumption, currentMonthlyCost, totalRooms, totalDistributionBoards.',
+    });
+  }
 
-  var totalConsumption = parseFloat(msg.payload.totalConsumption);
-  var totalCost = parseFloat(msg.payload.totalCost);
-  var totalRooms = parseFloat(msg.payload.totalRooms);
-  var totalBoards = parseFloat(msg.payload.totalBoards);
+  // Initialize variables
+  let panelsRequired;
+  const powerRequiredPerDay = monthlyConsumption / 30; // kWh/day
 
-  var panelRating = 500; //W
-  var sunlightHoursDaily = 8; //hours
-  var panelEfficiency = 0.7; //%
+  // Determine Panels Required
+  if (totalPanels) {
+    panelsRequired = totalPanels;
+  } else if (inverterSize) {
+    panelsRequired = Math.ceil(inverterSize / 2); // Assuming each panel contributes 2 kW
+  } else {
+    // Calculate panels required from monthly consumption
+    panelsRequired = Math.ceil(
+      powerRequiredPerDay / SYSTEM_DAILY_POWER_GENERATED_PER_PANEL
+    );
+  }
 
-  var totalMaxOutputPerPanel = 2.5; //kW
-  var batteryPower = 2500; //W
-  var systemDailyPowerGenerated = 4.5; //kW
-  var maxPowerGeneratedDaily = 5; //kW
+  // Calculate EMS Required
+  const emsRequired = Math.max(
+    totalDistributionBoards,
+    Math.ceil(panelsRequired / 12)
+  );
 
-  var powerRequiredPerRoom = 2.5; //kW
-  var powerProvidedPerPanelInstant = 2.5; //kW
-  var floatingPanelOutput = .5; //kW
+  // System Capacity Calculations
+  const peakPowerProvided = panelsRequired * PEAK_POWER_PER_PANEL; // kW
+  const totalPowerProvidedPerDay =
+    panelsRequired * SYSTEM_DAILY_POWER_GENERATED_PER_PANEL; // kWh/day
+  const totalFloatingOutput = panelsRequired * FLOATING_OUTPUT_PER_PANEL; // kWh
+  const batteryCapacity = panelsRequired * BATTERY_CAPACITY_PER_PANEL; // kWh
+  const avgDailyCapacity = totalPowerProvidedPerDay; // kWh/day
+  const avgMonthlyCapacity = avgDailyCapacity * 30; // kWh/month
 
-  var panelCost = 27000; //R
-  var emsCost = 9000; //R
-  var deliveryCostPercentage = 0.01;
-  var vatTax = 0.15;
+  // Suggested Load Breakdown
+  const kettlePower = 2; // kW per kettle
+  const televisionPower = 0.15; // kW per TV
+  const hotPlatePower = 1.5; // kW per hot plate
+  const lightsPower = 0.01; // kW per light
 
-  var powerRequiredPerDay = totalConsumption / 30;
+  const maxKettles = Math.floor(peakPowerProvided / kettlePower);
+  const maxTelevisions = Math.floor(peakPowerProvided / televisionPower);
+  const maxHotPlates = Math.floor(peakPowerProvided / hotPlatePower);
+  const maxLights = Math.floor(peakPowerProvided / lightsPower);
 
-  var panelsRequired = Math.ceil(powerRequiredPerDay / systemDailyPowerGenerated);
-  var emsRequired = Math.ceil(panelsRequired / 12);
+  // Financial Calculations
+  const currentCostPerUnit = currentMonthlyCost / monthlyConsumption; // R/kWh
 
-  var currentUnitCost = totalCost / totalConsumption;
-  var peakPowerRequired = totalRooms * powerRequiredPerRoom;
-  var peakPowerProvidedBySystem = panelsRequired * powerProvidedPerPanelInstant;
-  var totalPowerProvidedPerDay = panelsRequired * systemDailyPowerGenerated;
-  var totalFlaotingOutputOfSystem = panelsRequired * floatingPanelOutput;
-  var maxPowerOutputOfSystem = panelsRequired * totalMaxOutputPerPanel;
-  var maxPeakOutputDeficit = maxPowerOutputOfSystem - peakPowerRequired;
+  // Hardware Costs
+  const totalPP500Cost = panelsRequired * PANEL_COST;
+  const totalEMSCost = emsRequired * EMS_COST;
+  const totalHardwareCost = totalPP500Cost + totalEMSCost;
 
-  var totalCostPanels = panelsRequired * panelCost;
-  var totalCostEms = emsRequired * emsCost;
+  // Kit Cost
+  const kitCost = calculateKitCost(panelsRequired);
 
-  var costKit = calculateKitCost(panelsRequired);
+  // Delivery Cost
+  const deliveryCost = DELIVERY_PERCENTAGE * totalHardwareCost;
 
-  var deliveryCost = (totalCostPanels + totalCostEms + costKit) * deliveryCostPercentage;
+  // Labour Cost
+  const labourCost = calculateLabourCost(panelsRequired, emsRequired);
 
-  var labourCost = culculateLabourCost(panelsRequired, emsRequired);
+  // Total Cost Excl. VAT
+  const totalCostExclVAT =
+    totalHardwareCost + kitCost + deliveryCost + labourCost;
 
-  var totalCostExcl = totalCostPanels + totalCostEms + costKit + deliveryCost + labourCost;
-  var vatCost = totalCostExcl * vatTax;
-  var totalCostIncl = totalCostExcl + vatCost;
+  // VAT
+  const vat = VAT_RATE * totalCostExclVAT;
 
-  var systemLifeYears = 20;
-  var lcoe = calculateLcoe(totalCostIncl, (maxPowerGeneratedDaily * panelsRequired), systemLifeYears);
+  // Total Cost Incl. VAT
+  const totalCostInclVAT = totalCostExclVAT + vat;
 
-  var networkMaintenancePercentage = 0.08;
-  var networkMaintenanceCostPerUnit = networkMaintenancePercentage * lcoe;
+  // Investment Breakdown
+  const panelLifeExpectancyYears = PANEL_LIFE_EXPECTANCY_YEARS;
+  const panelLifeExpectancyMonths = panelLifeExpectancyYears * 12;
 
-  var warrantyFundPercentage = 0.05;
-  var warrantyFundCostPerUnit = warrantyFundPercentage * lcoe;
+  // LCOE
+  const lcoe = calculateLcoe(
+    totalCostInclVAT,
+    avgDailyCapacity,
+    panelLifeExpectancyYears
+  );
 
-  var serviceCenterPercentage = 0.05;
-  var serviceCenterCostPerUnit = serviceCenterPercentage * lcoe;
+  // Additional Costs per Unit
+  const maintenanceCost = lcoe * MAINTENANCE_PERCENTAGE;
+  const insuranceCost = lcoe * INSURANCE_PERCENTAGE;
+  const breakageCost = lcoe * BREAKAGE_PERCENTAGE;
+  const warrantyFundCost = lcoe * WARRANTY_FUND_PERCENTAGE;
+  const dbrCost = lcoe * DBR_PERCENTAGE;
+  const serviceCenterCost = lcoe * SERVICE_CENTER_PERCENTAGE;
+  const roofOwnerCost = lcoe * ROOF_OWNER_PERCENTAGE;
 
-  var roofOwnerPercentage = 0.05;
-  var roofOwnerCostPerUnit = roofOwnerPercentage * lcoe;
+  const sumAdditionalCostsPerUnit =
+    maintenanceCost +
+    insuranceCost +
+    breakageCost +
+    warrantyFundCost +
+    dbrCost +
+    serviceCenterCost +
+    roofOwnerCost;
 
-  var dbrCostPerUnit = lcoe + networkMaintenanceCostPerUnit + warrantyFundCostPerUnit + serviceCenterCostPerUnit + roofOwnerCostPerUnit;
+  const newCostPerUnit = lcoe + sumAdditionalCostsPerUnit;
 
-  var systemOwnerMarkup = 0.5;
-  var systemOwnerMarkupCostPerUnit = systemOwnerMarkup * dbrCostPerUnit;
+  const vatCostPerUnit = newCostPerUnit * VAT_RATE;
 
-  var newCostPerUnit = dbrCostPerUnit + systemOwnerMarkupCostPerUnit;
-  var vatCostPerUnit = vatTax * newCostPerUnit;
+  const newCostPerUnitInclVAT = newCostPerUnit + vatCostPerUnit;
 
-  var newCostPerUnitIncl = newCostPerUnit + vatCostPerUnit;
-
-  var result = {
-      panelsRequired: panelsRequired,
-      emsRequired: emsRequired,
-      currentUnitCost: currentUnitCost,
-      powerRequiredPerDay: powerRequiredPerDay,
-      peakPowerRequiredPerRoom: peakPowerRequired,
-      peakPowerProvidedBySystem: peakPowerProvidedBySystem,
-      totalPowerProvidedPerDay: totalPowerProvidedPerDay,
-      totalFlaotingOutputOfSystem: totalFlaotingOutputOfSystem,
-      maxPowerOutputOfSystem: maxPowerOutputOfSystem,
-      maxPeakOutputDeficit: maxPeakOutputDeficit,
-      panelCost: panelCost,
-      emsCost: emsCost,
-      totalCostPanels: totalCostPanels,
-      totalCostEms: totalCostEms,
-      costKit: calculateKitCost(panelsRequired),
-      costLabour: labourCost,
-      deliveryCost: deliveryCost,
-      totalCostExcl: totalCostExcl,
-      vatCost: vatCost,
-      totalCostIncl: totalCostIncl,
-      systemLifeYears: systemLifeYears,
-      systemLifeMonths: (systemLifeYears * 12),
-      lcoe: lcoe,
-      networkMaintenanceCostPerUnit: networkMaintenanceCostPerUnit,
-      warrantyFundCostPerUnit: warrantyFundCostPerUnit,
-      serviceCenterCostPerUnit: serviceCenterCostPerUnit,
-      roofOwnerCostPerUnit: roofOwnerCostPerUnit,
-      dbrCostPerUnit: dbrCostPerUnit,
-      systemOwnerMarkupCostPerUnit: systemOwnerMarkupCostPerUnit,
-      newCostPerUnit: newCostPerUnit,
-      vatCostPerUnit: vatCostPerUnit,
-      newCostPerUnitIncl: newCostPerUnitIncl
+  // Prepare response
+  const response = {
+    specifications: {
+      systemSize: {
+        pp500Panels: panelsRequired,
+        ems: emsRequired,
+      },
+      systemCapacity: {
+        peakPowerProvided: `${peakPowerProvided.toFixed(2)} kW`,
+        totalPowerProvidedPerDay: `${totalPowerProvidedPerDay.toFixed(
+          2
+        )} kWh`,
+        totalFloatingOutput: `${totalFloatingOutput.toFixed(2)} kWh`,
+        batteryCapacity: `${batteryCapacity.toFixed(2)} kWh`,
+        avgDailyCapacity: `${avgDailyCapacity.toFixed(2)} kWh`,
+        avgMonthlyCapacity: `${avgMonthlyCapacity.toFixed(2)} kWh`,
+      },
+      suggestedLoadBreakdown: {
+        kettle: maxKettles,
+        television: maxTelevisions,
+        hotPlate: maxHotPlates,
+        lights: maxLights,
+      },
+    },
+    financials: {
+      unitCost: {
+        currentCostPerUnit: `R ${currentCostPerUnit.toFixed(2)} per kWh`,
+        projectedNewCostPerUnit: `R ${newCostPerUnitInclVAT.toFixed(
+          2
+        )} per kWh`,
+      },
+      hardwareCost: {
+        totalPP500Cost: `R ${totalPP500Cost.toFixed(2)}`,
+        totalEMSCost: `R ${totalEMSCost.toFixed(2)}`,
+        totalHardwareCost: `R ${totalHardwareCost.toFixed(2)}`,
+        kitCost: `R ${kitCost.toFixed(2)}`,
+        deliveryCost: `R ${deliveryCost.toFixed(2)}`,
+        labour: `R ${labourCost.toFixed(2)}`,
+        totalCostExclVAT: `R ${totalCostExclVAT.toFixed(2)}`,
+        vat: `R ${vat.toFixed(2)}`,
+        totalCostInclVAT: `R ${totalCostInclVAT.toFixed(2)}`,
+      },
+      investmentBreakdown: {
+        panelLifeExpectancy: {
+          years: panelLifeExpectancyYears,
+          months: panelLifeExpectancyMonths,
+        },
+        lcoe: `R ${lcoe.toFixed(4)} per kWh`,
+        maintenance: `R ${maintenanceCost.toFixed(4)} per kWh`,
+        insurance: `R ${insuranceCost.toFixed(4)} per kWh`,
+        breakage: `R ${breakageCost.toFixed(4)} per kWh`,
+        warrantyFund: `R ${warrantyFundCost.toFixed(4)} per kWh`,
+        dbr: `R ${dbrCost.toFixed(4)} per kWh`,
+        serviceCenter: `R ${serviceCenterCost.toFixed(4)} per kWh`,
+        roofOwner: `R ${roofOwnerCost.toFixed(4)} per kWh`,
+        newCostPerUnit: `R ${newCostPerUnit.toFixed(4)} per kWh`,
+        vatCostPerUnit: `R ${vatCostPerUnit.toFixed(4)} per kWh`,
+        newCostPerUnitInclVAT: `R ${newCostPerUnitInclVAT.toFixed(
+          4
+        )} per kWh`,
+      },
+    },
   };
 
-  res.json(result);
+  // Validation
+  if (totalPanels) {
+    // If totalPanels is specified, check if it meets the power required per day
+    const powerProvidedPerDay =
+      panelsRequired * SYSTEM_DAILY_POWER_GENERATED_PER_PANEL;
+    if (powerProvidedPerDay < powerRequiredPerDay) {
+      response.validation = {
+        message: `The specified number of panels (${panelsRequired}) does not meet your daily energy requirements. You may need at least ${Math.ceil(
+          powerRequiredPerDay / SYSTEM_DAILY_POWER_GENERATED_PER_PANEL
+        )} panels to meet your consumption.`,
+      };
+    }
+  } else if (inverterSize) {
+    // If inverterSize is specified, check if the calculated panels meet the power required per day
+    const powerProvidedPerDay =
+      panelsRequired * SYSTEM_DAILY_POWER_GENERATED_PER_PANEL;
+    if (powerProvidedPerDay < powerRequiredPerDay) {
+      response.validation = {
+        message: `The specified inverter size (${inverterSize} kW) does not meet your daily energy requirements. You may need an inverter size of at least ${(
+          Math.ceil(
+            powerRequiredPerDay / SYSTEM_DAILY_POWER_GENERATED_PER_PANEL
+          ) * 2
+        ).toFixed(2)} kW to meet your consumption.`,
+      };
+    }
+  }
+
+  // Send response
+  res.json(response);
 };
+
 
 module.exports = {
   method: 'POST',

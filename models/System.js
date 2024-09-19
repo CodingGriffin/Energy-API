@@ -2,13 +2,13 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
   return sequelize.define('Systems', {
-    status: DataTypes.INTEGER,
+    status: DataTypes.TEXT,
     state: DataTypes.TEXT,
     lat: DataTypes.TEXT,
     long: DataTypes.TEXT,
     formatted_address: DataTypes.TEXT,
     monthly_consumption_kwh: DataTypes.FLOAT,
-    percentage_degredation: DataTypes.INTEGER,
+    percentage_degredation: DataTypes.FLOAT,
     percentage_escalation: DataTypes.FLOAT,
     percentage_system_owner: DataTypes.FLOAT,
     percentage_roof_owner: DataTypes.FLOAT,
