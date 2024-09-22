@@ -1,5 +1,5 @@
 const { System } = require("../../../../database/database");
-
+const calc = require("../../../../common/calc")
 function CostPU2Number(input) {
 	let str = input.slice(2);
 	str = str.slice(0, -8)
@@ -14,17 +14,21 @@ function financial2Number(input) {
 
 const systemSubmitController = async (req, res) => {
 	try {
-		const request = req.body;
+		const request = req.body.systems;
 		for (i in request) {
 			data = request[i];
-			console.log(data.props.financials)
+			const flow = calc.flow(CostPU2Number(data.calData.financials.unitCost.currentCostPerUnit), data.monthlyConsumption, financial2Number(data.calData.financials.hardwareCost.totalCostInclVAT));
+			const irr = calc.calculateIRR(flow.map(el => el["Annual CashFlow"]))
+			console.log(flow.map(el => el["Annual CashFlow"]))
+			const roi = flow[flow.length - 1]["Cumulative CashFlow"] / financial2Number(data.calData.financials.hardwareCost.totalCostInclVAT)
+			console.log(flow[flow.length - 1]["Cumulative CashFlow"])
 			const newSystem = {
 				state: "Installation Pending",
 				status: data.status,
 				lat: data.center.lat,
 				long: data.center.lng,
-				address_id: i + 1,
-				formatted_address: "_____________",
+				address_id: 1,
+				formatted_address: "123 Main St, Johannesburg, South Africa",
 				monthly_consumption_kwh: data.monthlyConsumption,
 				percentage_degredation: 0.029,
 				percentage_escalation: 0.025,
@@ -35,12 +39,14 @@ const systemSubmitController = async (req, res) => {
 				percentage_insurance: 0.01,
 				percentage_breakage: 0.005,
 				percentage_warranty: 0.0025,
-				lcoe: CostPU2Number(data.props.financials.investmentBreakdown.lcoe),
-				dbr: CostPU2Number(data.props.financials.investmentBreakdown.dbr),
-				unit_cost_new: CostPU2Number(data.props.financials.investmentBreakdown.newCostPerUnit),
-				unit_cost_current: CostPU2Number(data.props.financials.unitCost.currentCostPerUnit),
+				lcoe: CostPU2Number(data.calData.financials.investmentBreakdown.lcoe),
+				irr,
+				roi,
+				dbr: CostPU2Number(data.calData.financials.investmentBreakdown.dbr),
+				unit_cost_new: CostPU2Number(data.calData.financials.investmentBreakdown.newCostPerUnit),
+				unit_cost_current: CostPU2Number(data.calData.financials.unitCost.currentCostPerUnit),
 				total_panels: data.totalPanels,
-				total_ems: data.props.specifications.systemSize.ems,
+				total_ems: data.calData.specifications.systemSize.ems,
 				ac_cable_quantity: 19,
 				ac_cable_cost: 300,
 				earth_cable_quantity: 10,
@@ -49,16 +55,13 @@ const systemSubmitController = async (req, res) => {
 				earth_spike_cost: 150,
 				rails_clamps_cost: 800,
 				rails_clamps_quantity: data.totalPanels,
-				// panel_installation:
-				// ems_installation: 
-				// coc:
 				callout: 950,
 				consumables: 1000,
 				license_fee: 1250,
-				system_cost_excl: financial2Number(data.props.financials.hardwareCost.totalCostExclVAT),
-				system_cost_incl: financial2Number(data.props.financials.hardwareCost.totalCostInclVAT),
+				system_cost_excl: financial2Number(data.calData.financials.hardwareCost.totalCostExclVAT),
+				system_cost_incl: financial2Number(data.calData.financials.hardwareCost.totalCostInclVAT),
 			}
-			const res = await System.create(newSystem);
+			await System.create(newSystem);
 		}
 		return res.status(200).json({ message: "success" });
 	}

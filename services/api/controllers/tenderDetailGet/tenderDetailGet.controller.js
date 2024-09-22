@@ -260,6 +260,7 @@ const tenderDetailController = async (req, res) => {
           "display": {
             "min": 1.50,
             "max": 5.50,
+            "step": 0.01,
             "current": costPerUnit
           }
         },

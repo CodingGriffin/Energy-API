@@ -16,12 +16,31 @@ const User = require('../models/User')(sequelize);
 const AccountVerification = require('../models/AccountVerification')(sequelize);
 const Address = require('../models/Address')(sequelize);
 const System = require('../models/System')(sequelize);
-const ServiceCenter = require('../models/ServiceCenter')(sequelize);
+const Company = require('../models/Company')(sequelize);
+const CompanyType = require('../models/CompanyType')(sequelize);
+const StaffUser = require('../models/StaffUser')(sequelize);
+const Role = require('../models/Role')(sequelize);
+const Permission = require('../models/Permission')(sequelize);
+const RolePermission = require('../models/RolePermission')(sequelize)
 
-User.hasMany(ServiceCenter);
-ServiceCenter.belongsTo(User);
-System.hasOne(Address);
-Address.belongsTo(System);
+Address.hasOne(System);
+System.belongsTo(Address);
+User.hasOne(StaffUser);
+StaffUser.belongsTo(User);
+CompanyType.belongsTo(Company);
+Company.hasMany(CompanyType);
+CompanyType.hasMany(StaffUser);
+StaffUser.belongsTo(CompanyType);
+Role.hasMany(StaffUser);
+StaffUser.belongsTo(Role);
+User.hasMany(Company);
+Company.belongsTo(User);
+Address.hasMany(Company);
+Company.belongsTo(Address);
+Company.hasMany(Role);
+Role.belongsTo(Company);
+Role.belongsToMany(Permission, { through: RolePermission });
+Permission.belongsToMany(Role, { through: RolePermission });
 
 (async () => {
   try {
@@ -42,5 +61,9 @@ module.exports = {
   User,
   AccountVerification,
   Address,
-  System
+  System,
+  Role,
+  StaffUser,
+  Company,
+  CompanyType
 };

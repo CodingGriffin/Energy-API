@@ -11,9 +11,9 @@ module.exports = (sequelize) => {
     state_province: DataTypes.TEXT,
     country: DataTypes.TEXT,
     postal_code: DataTypes.TEXT,
-    formatted_address: DataTypes.INTEGER,
-    latitude: DataTypes.TEXT,
-    longitude: DataTypes.TEXT,
+    formatted_address: DataTypes.TEXT,
+    latitude: DataTypes.FLOAT,
+    longitude: DataTypes.FLOAT,
 
     createdAt: {
       type: DataTypes.DATE,
