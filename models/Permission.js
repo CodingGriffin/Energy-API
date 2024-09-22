@@ -1,10 +1,10 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  return sequelize.define('Role', {
+  return sequelize.define('Permission', {
     name: {
       type: DataTypes.TEXT,
-    }, 
+    },
     description: {
       type: DataTypes.TEXT,
     },

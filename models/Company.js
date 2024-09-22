@@ -8,6 +8,12 @@ module.exports = (sequelize) => {
     logo: {
       type: DataTypes.TEXT,
     },
+    phone: DataTypes.TEXT,
+    email: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      unique: true
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),

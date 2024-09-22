@@ -20,10 +20,12 @@ const Company = require('../models/Company')(sequelize);
 const CompanyType = require('../models/CompanyType')(sequelize);
 const StaffUser = require('../models/StaffUser')(sequelize);
 const Role = require('../models/Role')(sequelize);
+const Permission = require('../models/Permission')(sequelize);
+const RolePermission = require('../models/RolePermission')(sequelize)
 
 Address.hasOne(System);
 System.belongsTo(Address);
-User.hasMany(StaffUser);
+User.hasOne(StaffUser);
 StaffUser.belongsTo(User);
 CompanyType.belongsTo(Company);
 Company.hasMany(CompanyType);
@@ -33,8 +35,12 @@ Role.hasMany(StaffUser);
 StaffUser.belongsTo(Role);
 User.hasMany(Company);
 Company.belongsTo(User);
-Address.hasOne(Company);
+Address.hasMany(Company);
 Company.belongsTo(Address);
+Company.hasMany(Role);
+Role.belongsTo(Company);
+Role.belongsToMany(Permission, { through: RolePermission });
+Permission.belongsToMany(Role, { through: RolePermission });
 
 (async () => {
   try {
