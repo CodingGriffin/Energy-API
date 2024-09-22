@@ -9,4 +9,6 @@ module.exports = {
   roleSubmitRoute: require('./roleSubmit/roleSubmit.controller.js'),
   companySubmitRoute: require('./companySubmit/companySubmit.controller.js'),
   companyTypeSubmitRoute: require('./companyTypeSubmit/companyTypeSubmit.controller.js'),
+  staffUserSubmitRoute: require('./staffUserSubmit/staffUserSubmit.controller.js'),
+  staffUserGetRoute: require('./staffUserGet/staffUserGet.controller.js')
 };

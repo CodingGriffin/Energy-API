@@ -27,9 +27,14 @@ for (const route of Object.values(SERVICE_ROUTES)) {
 
   switch (route.method.toUpperCase()) {
     case 'GET':
-      app.get(route.path, (req, res) => {
-        bindRouteHandler(req, res, route);
-      });
+      route.requiresAuth ?
+        app.get(route.path, auth, (req, res) => {
+          bindRouteHandler(req, res, route);
+        })
+        :
+        app.get(route.path, (req, res) => {
+          bindRouteHandler(req, res, route);
+        })
       break;
     case 'POST':
       route.requiresAuth ?

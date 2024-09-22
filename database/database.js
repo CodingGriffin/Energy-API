@@ -21,8 +21,8 @@ const CompanyType = require('../models/CompanyType')(sequelize);
 const StaffUser = require('../models/StaffUser')(sequelize);
 const Role = require('../models/Role')(sequelize);
 
-System.hasOne(Address);
-Address.belongsTo(System);
+Address.hasOne(System);
+System.belongsTo(Address);
 User.hasMany(StaffUser);
 StaffUser.belongsTo(User);
 CompanyType.belongsTo(Company);

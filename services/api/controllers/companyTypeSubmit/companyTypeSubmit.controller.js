@@ -3,8 +3,8 @@ const { CompanyType } = require("../../../../database/database");
 const companyTypeSubmitController = async (req, res) => {
   try {
     const data = req.body;
-    const newCompany = await CompanyType.create({ ...data })
-    return res.json({ ...newCompany })
+    const newCompanyType = await CompanyType.create({ ...data })
+    return res.json({ ...newCompanyType })
   } catch(err) {
     console.error(err)
     return res.status(500).json({ message: "Internal Server Error" });
