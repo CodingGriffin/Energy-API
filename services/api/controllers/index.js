@@ -6,4 +6,5 @@ module.exports = {
   systemSubmitRoute: require('./systemSubmit/systemSubmit.controller.js'),
   tenderGetRoute: require('./tenderGet/tenderGet.controller.js'),
   tenderDetailGetRoute: require('./tenderDetailGet/tenderDetailGet.controller.js'),
+  roleSubmitRoute: require('./roleSubmit/roleSubmit.controller.js'),
 };

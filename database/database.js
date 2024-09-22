@@ -55,5 +55,9 @@ module.exports = {
   User,
   AccountVerification,
   Address,
-  System
+  System,
+  Role,
+  StaffUser,
+  Company,
+  CompanyType
 };

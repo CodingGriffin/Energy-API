@@ -58,7 +58,7 @@ const systemSubmitController = async (req, res) => {
 				system_cost_excl: financial2Number(data.props.financials.hardwareCost.totalCostExclVAT),
 				system_cost_incl: financial2Number(data.props.financials.hardwareCost.totalCostInclVAT),
 			}
-			const res = await System.create(newSystem);
+			await System.create(newSystem);
 		}
 		return res.status(200).json({ message: "success" });
 	}
