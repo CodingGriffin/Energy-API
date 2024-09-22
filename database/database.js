@@ -25,16 +25,16 @@ System.hasOne(Address);
 Address.belongsTo(System);
 User.hasMany(StaffUser);
 StaffUser.belongsTo(User);
-Role.hasMany(User);
-User.belongsTo(Role);
-CompanyType.hasMany(User);
-User.belongsTo(CompanyType);
-CompanyType.hasMany(Company);
-Company.belongsTo(CompanyType);
+CompanyType.belongsTo(Company);
+Company.hasMany(CompanyType);
 CompanyType.hasMany(StaffUser);
 StaffUser.belongsTo(CompanyType);
 Role.hasMany(StaffUser);
 StaffUser.belongsTo(Role);
+User.hasMany(Company);
+Company.belongsTo(User);
+Address.hasOne(Company);
+Company.belongsTo(Address);
 
 (async () => {
   try {
