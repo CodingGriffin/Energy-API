@@ -119,6 +119,7 @@ const calculateController = (req, res) => {
     totalDistributionBoards,
   } = req.body;
 
+  console.log(req.body)
   // Input Validation
   if (
     !monthlyConsumption ||

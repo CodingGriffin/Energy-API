@@ -1,4 +1,6 @@
+const { generateJWTToken } = require("../../../../common/utils");
 const { AccountVerification } = require("../../../../database/database");
+const { User } = require("../../../../database/database")
 
 const otpVerifyController = async (req, res) => {
   try {
@@ -7,7 +9,7 @@ const otpVerifyController = async (req, res) => {
 
     const lowerCaseEmail = email.toLowerCase();
     const verification = await AccountVerification.findOne({ where: { email: lowerCaseEmail, guid } });
-
+    const user = await User.findOne({ where: { email: lowerCaseEmail } })
     if (!verification) {
       return res.status(400).json({ message: 'Invalid OTP' });
     }
@@ -26,8 +28,14 @@ const otpVerifyController = async (req, res) => {
     if (currentTime > verification.expiration_time) {
       return res.status(400).json({ message: 'Expired OTP' });
     }
-
-    return res.status(200).json({ message: 'OTP verified successfully', guid: guid });
+    const data = { message: 'OTP verified successfully', guid: guid }
+    if (user) {
+      data.token = generateJWTToken(user.id, user.email)
+      data.first_name = user.first_name;
+      data.last_name = user.last_name;
+      data.phone_number = user.phone_number;
+    }
+    return res.status(200).json(data);
   } catch (err) {
     console.error(err.message);
     return res.status(500).json({ message: 'Internal Server Error' });
