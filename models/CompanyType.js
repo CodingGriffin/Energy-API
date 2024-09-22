@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
   return sequelize.define('CompanyType', {
-    Type: {
+    type: {
       type: DataTypes.TEXT,
     },
     createdAt: {

@@ -3,6 +3,8 @@ const { Company } = require("../../../../database/database");
 const companySubmitController = async (req, res) => {
   try {
     const data = req.body;
+    data.UserId = req.user.id
+    data.AddressId = 2
     const newCompany = await Company.create({ ...data })
     return res.json({ ...newCompany })
   } catch(err) {

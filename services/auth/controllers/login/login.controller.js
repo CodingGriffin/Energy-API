@@ -17,7 +17,7 @@ const loginController = async (req, res) => {
       return res.status(403).json("Wrong password!");
     }
 
-    const token = generateJWTToken(user.email);
+    const token = generateJWTToken(user.id, user.email);
 
     return res.status(200).json({ token });
   } catch (err) {
