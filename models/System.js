@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  return sequelize.define('Systems', {
+  return sequelize.define('System', {
     status: DataTypes.TEXT,
     state: DataTypes.TEXT,
     lat: DataTypes.TEXT,

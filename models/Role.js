@@ -1,13 +1,9 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  return sequelize.define('ServiceCenter', {
-    user_id: {
-      type: DataTypes.INTEGER,
-    },
-    zone: {
-      type: DataTypes.CHAR,
-      unique: true
+  return sequelize.define('Role', {
+    name: {
+      type: DataTypes.TEXT,
     },
     createdAt: {
       type: DataTypes.DATE,
