@@ -1,13 +1,11 @@
 let jwt = require('jsonwebtoken');
 const config = require('./constants')
 
-let auth = (requiresAuth, req, res, next) => {
-  console.log(requiresAuth)
-  console.log(req.headers)
+let auth = (req, res, next) => {
   let token = req.headers['x-access-token'] || req.headers['authorization'];
 
   if (token == null) {
-    return res.json({
+    return res.status(401).json({
       status: false,
       message: 'Auth token is not supplied'
     });
@@ -19,9 +17,9 @@ let auth = (requiresAuth, req, res, next) => {
   }
 
   if (token) {
-    jwt.verify(token, config.secret_key, (err, decoded) => {
+    jwt.verify(token, config.JWT_SECRET, (err, decoded) => {
       if (err) {
-        return res.json({
+        return res.status(403).json({
           status: false,
           message: 'Token is not valid'
         });
@@ -31,7 +29,7 @@ let auth = (requiresAuth, req, res, next) => {
       }
     });
   } else {
-    return res.json({
+    return res.status(401).json({
       status: false,
       message: 'Auth token is not supplied'
     });

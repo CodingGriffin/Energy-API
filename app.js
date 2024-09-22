@@ -32,9 +32,14 @@ for (const route of Object.values(SERVICE_ROUTES)) {
       });
       break;
     case 'POST':
-      app.post(route.path, auth, (req, res) => {
-        bindRouteHandler(req, res, route);
-      });
+      route.requiresAuth ?
+        app.post(route.path, auth, (req, res) => {
+          bindRouteHandler(req, res, route);
+        })
+        :
+        app.post(route.path, (req, res) => {
+          bindRouteHandler(req, res, route);
+        })
       break;
     case 'PUT':
       app.put(route.path, (req, res) => {
