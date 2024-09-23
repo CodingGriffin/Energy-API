@@ -1,5 +1,5 @@
 const { System } = require("../../../../database/database");
-
+const calc = require("../../../../common/calc")
 function CostPU2Number(input) {
 	let str = input.slice(2);
 	str = str.slice(0, -8)
@@ -17,7 +17,11 @@ const systemSubmitController = async (req, res) => {
 		const request = req.body.systems;
 		for (i in request) {
 			data = request[i];
-			console.log(data)
+			const flow = calc.flow(CostPU2Number(data.calData.financials.unitCost.currentCostPerUnit), data.monthlyConsumption, financial2Number(data.calData.financials.hardwareCost.totalCostInclVAT));
+			const irr = calc.calculateIRR(flow.map(el => el["Annual CashFlow"]))
+			console.log(flow.map(el => el["Annual CashFlow"]))
+			const roi = flow[flow.length - 1]["Cumulative CashFlow"] / financial2Number(data.calData.financials.hardwareCost.totalCostInclVAT)
+			console.log(flow[flow.length - 1]["Cumulative CashFlow"])
 			const newSystem = {
 				state: "Installation Pending",
 				status: data.status,
@@ -36,6 +40,8 @@ const systemSubmitController = async (req, res) => {
 				percentage_breakage: 0.005,
 				percentage_warranty: 0.0025,
 				lcoe: CostPU2Number(data.calData.financials.investmentBreakdown.lcoe),
+				irr,
+				roi,
 				dbr: CostPU2Number(data.calData.financials.investmentBreakdown.dbr),
 				unit_cost_new: CostPU2Number(data.calData.financials.investmentBreakdown.newCostPerUnit),
 				unit_cost_current: CostPU2Number(data.calData.financials.unitCost.currentCostPerUnit),
