@@ -25,7 +25,7 @@ const RolePermission = require('../models/RolePermission')(sequelize)
 
 Address.hasOne(System);
 System.belongsTo(Address);
-User.hasOne(StaffUser);
+User.hasMany(StaffUser);
 StaffUser.belongsTo(User);
 CompanyType.belongsTo(Company);
 Company.hasMany(CompanyType);
