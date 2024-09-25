@@ -1,4 +1,3 @@
-const { JSON } = require("sequelize");
 const { System } = require("../../../../database/database");
 
 const deliveryCostPercentage = 0.01;

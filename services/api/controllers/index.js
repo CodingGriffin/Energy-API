@@ -10,5 +10,9 @@ module.exports = {
   companySubmitRoute: require('./companySubmit/companySubmit.controller.js'),
   companyTypeSubmitRoute: require('./companyTypeSubmit/companyTypeSubmit.controller.js'),
   staffUserSubmitRoute: require('./staffUserSubmit/staffUserSubmit.controller.js'),
-  staffUserGetRoute: require('./staffUserGet/staffUserGet.controller.js')
+  staffUserGetRoute: require('./staffUserGet/staffUserGet.controller.js'),
+  viewTypeGetRoute: require('./viewTypeGet/viewTypeGet.controller.js'),
+  systemBySiteGetRoute: require('./systemsBySiteGet/systemsBySiteGet.controller.js'),
+  systemByZoneGetRoute: require('./systemsByZoneGet/systemsByZoneGet.controller.js'),
+  systemOnZoneGetRoute: require('./systemsOnZoneGet/systemsOnZoneGet.controller.js'),
 };
