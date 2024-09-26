@@ -1,9 +1,10 @@
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
 const { System, Address } = require("../../../../database/database");
 const pageSize = 10;
 
 const systemWithoutAddress = (param) => {
   let sys = param;
+  sys.income = sys.monthly_consumption_kwh * sys.unit_cost_new
   delete sys.AddressId
   delete sys.Address
   return sys
@@ -18,22 +19,25 @@ const changeKeyId2AddressId = (sys) => {
 const systemBySiteGetController = async (req, res) => {
   try {
     const query = req.query;
-    // console.log(query)
     const page = parseInt(query.page) || 1;
     const whereClause = {};
-    // console.log(whereClause)
+    if (query.search) whereClause.formatted_address = { [Op.like]: `%${query.search}%` }
+    if (query.status) whereClause.state = query.status
     const limit = pageSize;
     const offset = (page - 1) * pageSize;
 
     System.findAll({
-      include: Address
+      where: whereClause,
+      attributes: ['id', 'AddressId', 'formatted_address', 'monthly_consumption_kwh', 'total_panels', 'total_ems', 'updatedAt', 'state', 'unit_cost_new'],
+      include: {
+        model: Address,
+        attributes: ['id', 'formatted_address']
+      },
     })
       .then(systemsWithMode => {
         const systems = systemsWithMode.map(sys => ({ ...sys.dataValues, Address: sys.dataValues.Address.dataValues }))
-        console.log(systems)
-        const result = systems.reduce((res, sys) => {
+        let result = systems.reduce((res, sys) => {
           let index = res.findIndex(el => el.AddressId === sys.AddressId)
-          console.log(index)
           if (index < 0) {
             res = [
               ...res,
@@ -48,11 +52,20 @@ const systemBySiteGetController = async (req, res) => {
               ]
             }
           }
-          console.log(res)
           return res;
         }, [])
-        // console.log(result)
-        res.json(result)
+        const totalItems = result.length
+        const totalPages = Math.ceil(totalItems / pageSize)
+        result = result.slice(offset, offset + limit)
+        res.json({
+          data: result,
+          meta: {
+            totalItems,
+            totalPages,
+            currentPage: page,
+            pageSize: pageSize,
+          }
+        })
       })
   }
   catch (err) {
@@ -63,7 +76,7 @@ const systemBySiteGetController = async (req, res) => {
 
 module.exports = {
   method: 'GET',
-  path: '/api/site/system',
+  path: '/api/zone/site',
   handler: systemBySiteGetController,
   requiresAuth: false,
   permissions: []

@@ -12,6 +12,7 @@ module.exports = {
   staffUserSubmitRoute: require('./staffUserSubmit/staffUserSubmit.controller.js'),
   staffUserGetRoute: require('./staffUserGet/staffUserGet.controller.js'),
   viewTypeGetRoute: require('./viewTypeGet/viewTypeGet.controller.js'),
-  systemBySiteGetRoute: require('./systemsBySiteGet/systemBySiteGet.controller.js'),
-  systemByZoneGetRoute: require('./systemByZoneGet/systemByZoneGet.controller.js')
+  systemBySiteGetRoute: require('./systemsBySiteGet/systemsBySiteGet.controller.js'),
+  systemByZoneGetRoute: require('./systemsByZoneGet/systemsByZoneGet.controller.js'),
+  systemOnZoneGetRoute: require('./systemsOnZoneGet/systemsOnZoneGet.controller.js'),
 };
