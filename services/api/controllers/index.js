@@ -15,4 +15,5 @@ module.exports = {
   systemBySiteGetRoute: require('./systemsBySiteGet/systemsBySiteGet.controller.js'),
   systemByZoneGetRoute: require('./systemsByZoneGet/systemsByZoneGet.controller.js'),
   systemOnZoneGetRoute: require('./systemsOnZoneGet/systemsOnZoneGet.controller.js'),
+  orderGetRoute: require('./orderGet/orderGet.controller.js'),
 };

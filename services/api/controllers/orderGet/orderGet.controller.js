@@ -1,8 +1,8 @@
 const { Op } = require("sequelize");
 const { System } = require("../../../../database/database");
-const pageSize = 10;
+const pageSize = 4;
 
-const systemOnZoneGetController = async (req, res) => {
+const orderGetController = async (req, res) => {
   try {
     const query = req.query;
     const page = parseInt(query.page) || 1;
@@ -16,14 +16,12 @@ const systemOnZoneGetController = async (req, res) => {
       where: whereClause,
       limit: limit,
       offset: offset,
-      attributes: ['id', 'formatted_address', 'monthly_consumption_kwh', 'total_panels', 'total_ems', 'updatedAt', 'state', 'unit_cost_new'],
+      attributes: ['id', 'formatted_address', 'monthly_consumption_kwh', 'total_panels', 'total_ems', 'updatedAt', 'status', 'system_cost_incl'],
     })
       .then(systemsWithMode => {
         const totalPages = Math.ceil(systemsWithMode.count / pageSize);
         const systems = systemsWithMode.rows.map(sys => {
           let result = sys.dataValues
-          result.income = sys.monthly_consumption_kwh * sys.unit_cost_new
-          delete result.unit_cost_new
           return result
         })
         res.json({
@@ -45,8 +43,8 @@ const systemOnZoneGetController = async (req, res) => {
 
 module.exports = {
   method: 'GET',
-  path: '/api/zone/system',
-  handler: systemOnZoneGetController,
+  path: '/api/order',
+  handler: orderGetController,
   requiresAuth: false,
   permissions: []
 };
