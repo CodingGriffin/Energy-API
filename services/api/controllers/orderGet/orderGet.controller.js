@@ -6,9 +6,12 @@ const orderGetController = async (req, res) => {
   try {
     const query = req.query;
     const page = parseInt(query.page) || 1;
+    let showClosed = query.showclosed || true
+    console.log(showClosed)
     const whereClause = {};
     if (query.search) whereClause.formatted_address = { [Op.like]: `%${query.search}%` }
-    if (query.status) whereClause.state = query.status
+    if (query.status) whereClause.status = query.status
+    if (showClosed == "false") whereClause.status = { [Op.in]: ['New', 'Follow Up', 'Quote Sent', 'Invoice Sent', 'Installation Pending'] }
     const limit = pageSize;
     const offset = (page - 1) * pageSize;
 
@@ -23,7 +26,7 @@ const orderGetController = async (req, res) => {
         const systems = systemsWithMode.rows.map(sys => {
           let result = sys.dataValues
           return result
-        })
+        }).sort((a, b) => a.id - b.id)
         res.json({
           data: systems,
           meta: {
