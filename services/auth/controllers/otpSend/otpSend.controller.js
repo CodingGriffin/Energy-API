@@ -7,6 +7,7 @@ const otpSendController = async (req, res) => {
   try {
     const { email } = req.body;
     const otpCode = generateOTP();
+    console.log(otpCode)
     const guid = uuidv4();
     const currentTime = new Date();
     const expiration_time = new Date(currentTime.getTime() + 10 * 60 * 1000);

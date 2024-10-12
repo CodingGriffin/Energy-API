@@ -7,7 +7,8 @@ const orderGetController = async (req, res) => {
     const query = req.query;
     const page = parseInt(query.page) || 1;
     let showClosed = query.showclosed || true
-    console.log(showClosed)
+    console.log(req.headers.vt1)
+    console.log(req.headers.vt2)
     const whereClause = {};
     if (query.search) whereClause.formatted_address = { [Op.like]: `%${query.search}%` }
     if (query.status) whereClause.status = query.status
