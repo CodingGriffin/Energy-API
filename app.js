@@ -7,7 +7,7 @@ const SERVICE_ROUTES = require('./services');
 const auth = require('./common/auth');
 
 const app = express();
-const port = 8080;
+const port = 8081;
 
 app.use(cors());
 app.use(express.json());

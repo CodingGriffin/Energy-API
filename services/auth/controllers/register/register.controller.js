@@ -19,7 +19,7 @@ const registerController = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await User.create({
+    const createdUser = await User.create({
       first_name: firstName,
       last_name: lastName,
       email: lowerCaseEmail,
@@ -27,7 +27,7 @@ const registerController = async (req, res) => {
       phone_number: phoneNumber
     });
 
-    const token = generateJWTToken(lowerCaseEmail);
+    const token = generateJWTToken(createdUser.id, lowerCaseEmail, firstName, lastName);
 
     res.status(201).json({ message: 'User registered successfully', token: token });
   } catch (err) {

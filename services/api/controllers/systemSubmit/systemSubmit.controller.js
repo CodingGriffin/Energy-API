@@ -1,5 +1,6 @@
 const { System } = require("../../../../database/database");
-const calc = require("../../../../common/calc")
+const calc = require("../../../../common/calc");
+const { consumers } = require("nodemailer/lib/xoauth2");
 function CostPU2Number(input) {
 	let str = input.slice(2);
 	str = str.slice(0, -8)
@@ -15,6 +16,8 @@ function financial2Number(input) {
 const systemSubmitController = async (req, res) => {
 	try {
 		const request = req.body.systems;
+	
+    console.log(req.user)
 		for (i in request) {
 			data = request[i];
 			const flow = calc.flow(CostPU2Number(data.calData.financials.unitCost.currentCostPerUnit), data.monthlyConsumption, financial2Number(data.calData.financials.hardwareCost.totalCostInclVAT));
@@ -60,6 +63,7 @@ const systemSubmitController = async (req, res) => {
 				license_fee: 1250,
 				system_cost_excl: financial2Number(data.calData.financials.hardwareCost.totalCostExclVAT),
 				system_cost_incl: financial2Number(data.calData.financials.hardwareCost.totalCostInclVAT),
+				consumer_id: req.user.id
 			}
 			await System.create(newSystem);
 		}
@@ -75,6 +79,6 @@ module.exports = {
 	method: 'POST',
 	path: '/api/system/submit',
 	handler: systemSubmitController,
-	requiresAuth: false,
+	requiresAuth: true,
 	permissions: []
 };
